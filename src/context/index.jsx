@@ -1,25 +1,25 @@
-import { createContext, useState, useContext, useEffect } from 'react'
-import axios from 'axios'
+import { createContext, useState, useContext, useEffect } from "react";
+import axios from "axios";
 
-import { BASE_URL } from '../constatns'
+import { BASE_URL } from "../constatns";
 
-const CartContext = createContext()
+const CartContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const provider_id = 6
+  const provider_id = 1;
 
   const getInitailCartData = () => {
-    const cartData = localStorage.getItem('cart-data')
-    return cartData ? JSON.parse(cartData) : []
-  }
+    const cartData = localStorage.getItem("cart-data");
+    return cartData ? JSON.parse(cartData) : [];
+  };
 
-  const [cartData, setCartData] = useState(getInitailCartData)
-  const [storeData, setStoreData] = useState({})
-  const [categories, setCategories] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [cartData, setCartData] = useState(getInitailCartData);
+  const [storeData, setStoreData] = useState({});
+  const [categories, setCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const getData = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     axios
       .all([
         axios.get(`${BASE_URL}/providers/${provider_id}`),
@@ -27,17 +27,17 @@ export const AppProvider = ({ children }) => {
       ])
       .then(
         axios.spread((storeData, categories) => {
-          setStoreData(storeData.data)
-          setCategories(categories.data)
+          setStoreData(storeData.data);
+          setCategories(categories.data);
         })
       )
-      .finally(() => setIsLoading(false))
-  }
+      .finally(() => setIsLoading(false));
+  };
 
   useEffect(() => {
-    getData()
-    localStorage.setItem('cart-data', JSON.stringify(cartData))
-  }, [cartData])
+    getData();
+    localStorage.setItem("cart-data", JSON.stringify(cartData));
+  }, [cartData]);
 
   return (
     <CartContext.Provider
@@ -52,7 +52,7 @@ export const AppProvider = ({ children }) => {
     >
       {children}
     </CartContext.Provider>
-  )
-}
+  );
+};
 
-export const useGlobalContext = () => useContext(CartContext)
+export const useGlobalContext = () => useContext(CartContext);
